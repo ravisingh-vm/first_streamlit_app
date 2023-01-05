@@ -23,16 +23,19 @@ fruits_to_show = my_fruit_list.loc[fruits_selected]
 streamlit.dataframe(fruits_to_show)
 
 streamlit.header("Fruityvice Fruit Advice!")
-fruit_choice = streamlit.text_input('What fruit would you like information about?','Kiwi')
-streamlit.write('The user entered ', fruit_choice)  ## Add a Text Entry Box and Send the Input to Fruityvice as Part of the API Call
+try:
+  fruit_choice = streamlit.text_input('What fruit would you like information about?')
+  if not fruit_choice:
+    streamlit.error("Please select the food to get the information")
+  else:
+    fruityvice_response = requests.get("https://fruityvice.com/api/fruit/" + fruit_choice)  # streamlit.text(fruityvice_response.json()) # Just writes the data on the screen (hide the line in the app)
+    fruityvice_normalized = pandas.json_normalize(fruityvice_response.json())               # Take the json cersion of response and normalize it.
+    streamlit.dataframe(fruityvice_normalized)                                              # output it the screen as a table
+  
+#  streamlit.write('The user entered ', fruit_choice)  ## Add a Text Entry Box and Send the Input to Fruityvice as Part of the API Call
+except URLError as e:
+  streamlit.error()
 
-fruityvice_response = requests.get("https://fruityvice.com/api/fruit/" + fruit_choice)
-# streamlit.text(fruityvice_response.json()) # Just writes the data on the screen (hide the line in the app)
-
-# Take the json cersion of response and normalize it.
-fruityvice_normalized = pandas.json_normalize(fruityvice_response.json())
-# output it the screen as a table
-streamlit.dataframe(fruityvice_normalized)
 
 streamlit.stop() 
 my_cnx = snowflake.connector.connect(**streamlit.secrets["snowflake"])
