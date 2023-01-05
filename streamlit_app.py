@@ -23,7 +23,7 @@ streamlit.header("Fruityvice Fruit Advice!")
 fruit_choice = streamlit.text_input('What fruit would you like information about?','Kiwi')
 streamlit.write('The user entered ', fruit_choice)  ## Add a Text Entry Box and Send the Input to Fruityvice as Part of the API Call
 
-fruityvice_response = requests.get("https://fruityvice.com/api/fruit/" + fruit_choic)
+fruityvice_response = requests.get("https://fruityvice.com/api/fruit/" + fruit_choice)
 # streamlit.text(fruityvice_response.json()) # Just writes the data on the screen (hide the line in the app)
 
 # Take the json cersion of response and normalize it.
